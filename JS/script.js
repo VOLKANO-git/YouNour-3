@@ -64,4 +64,21 @@ function afficherListe() {
   const mot = recherche.value.trim().toLowerCase();
   const idGroupe = groupefilter.value;
 
-~
+  const resultat = eleves.filter((eleve) => {
+    const bonGroupe = idGroupe === "" || String(eleve.groupeId) === idGroupe;
+    const bonMot = (eleve.prenom + " " + eleve.nom).toLowerCase().includes(mot);
+    return bonGroupe && bonMot;
+  });
+
+  liste.textContent = "";
+  liste.append(...resultat.map(creerLigne));
+
+  compteur.textContent =
+    resultat.length + (resultat.length > 1 ? " élèves" : " élève");
+
+  messageVide.hidden = resultat.length > 0;
+}
+
+recherche.addEventListener("input", afficherListe);
+groupefilter.addEventListener("change", afficherListe);
+afficherListe();
