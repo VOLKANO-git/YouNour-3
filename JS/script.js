@@ -55,7 +55,7 @@ liste.append(...cards);
 compteur.textContent =
   eleves.length + (eleves.length > 1 ? " élèves" : " élève");
 
-  function afficherListe() {
+function afficherListe() {
   const mot = recherche.value.trim().toLowerCase();
 
   const resultat = eleves.filter((eleve) =>
@@ -67,9 +67,15 @@ compteur.textContent =
 
   compteur.textContent =
     resultat.length + (resultat.length > 1 ? " élèves" : " élève");
-
-  aucunResultat.hidden = resultat.length > 0;
 }
-
 recherche.addEventListener("input", afficherListe);
 afficherListe();
+
+const groupefilter = document.getElementById("filtre-groupe");
+groupes.forEach(function (groupe) {
+  console.log("groupe", groupe);
+  const groupeO = document.createElement("option");
+  groupeO.value = groupe.id;
+  groupeO.textContent = groupe.nom;
+  groupefilter.append(groupeO);
+});
