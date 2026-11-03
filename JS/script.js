@@ -54,3 +54,22 @@ liste.append(...cards);
 
 compteur.textContent =
   eleves.length + (eleves.length > 1 ? " élèves" : " élève");
+
+  function afficherListe() {
+  const mot = recherche.value.trim().toLowerCase();
+
+  const resultat = eleves.filter((eleve) =>
+    (eleve.prenom + " " + eleve.nom).toLowerCase().includes(mot),
+  );
+
+  liste.textContent = "";
+  liste.append(...resultat.map(creerLigne));
+
+  compteur.textContent =
+    resultat.length + (resultat.length > 1 ? " élèves" : " élève");
+
+  aucunResultat.hidden = resultat.length > 0;
+}
+
+recherche.addEventListener("input", afficherListe);
+afficherListe();
