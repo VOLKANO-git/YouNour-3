@@ -33,7 +33,7 @@ Projet individuel réalisé pour **Sahla Digital** (Brief B5). Cette interface p
 
 1. Cloner le dépôt :
    ```bash
-   git clone <url-du-depot>
+   git clone https://github.com/VOLKANO-git/YouNour-3.git
    ```
 2. Ouvrir le dossier dans VS Code.
 3. Lancer `index.html` avec l'extension **Live Server** (par défaut sur `http://127.0.0.1:5500`).
