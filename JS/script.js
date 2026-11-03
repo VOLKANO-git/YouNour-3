@@ -49,33 +49,19 @@ function creerLigne(eleve) {
   return card;
 }
 
-const cards = eleves.map(creerLigne);
-liste.append(...cards);
-
-compteur.textContent =
-  eleves.length + (eleves.length > 1 ? " élèves" : " élève");
-
-function afficherListe() {
-  const mot = recherche.value.trim().toLowerCase();
-
-  const resultat = eleves.filter((eleve) =>
-    (eleve.prenom + " " + eleve.nom).toLowerCase().includes(mot),
-  );
-
-  liste.textContent = "";
-  liste.append(...resultat.map(creerLigne));
-
-  compteur.textContent =
-    resultat.length + (resultat.length > 1 ? " élèves" : " élève");
-}
-recherche.addEventListener("input", afficherListe);
-afficherListe();
-
+const recherche = document.getElementById("recherche");
 const groupefilter = document.getElementById("filtre-groupe");
+const messageVide = document.getElementById("aucun-resultat");
+
 groupes.forEach(function (groupe) {
-  console.log("groupe", groupe);
   const groupeO = document.createElement("option");
   groupeO.value = groupe.id;
   groupeO.textContent = groupe.nom;
   groupefilter.append(groupeO);
 });
+
+function afficherListe() {
+  const mot = recherche.value.trim().toLowerCase();
+  const idGroupe = groupefilter.value;
+
+~
