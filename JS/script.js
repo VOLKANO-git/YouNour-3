@@ -61,21 +61,29 @@ groupes.forEach(function (groupe) {
 });
 
 function afficherListe() {
-  const mot = recherche.value.trim().toLowerCase();
   const idGroupe = groupefilter.value;
+  const mot = recherche.value.trim().toLowerCase();
+  let resultat = eleves;
 
-  const resultat = eleves.filter((eleve) => {
-    const bonGroupe = idGroupe === "" || String(eleve.groupeId) === idGroupe;
-    const bonMot = (eleve.prenom + " " + eleve.nom).toLowerCase().includes(mot);
-    return bonGroupe && bonMot;
-  });
+
+  if (idGroupe !== "") {
+    resultat = resultat.filter(function (eleve) {
+      return String(eleve.groupeId) === idGroupe;
+    });
+  }
+
+  if (mot !== "") {
+    resultat = resultat.filter(function (eleve) {
+      return (eleve.prenom + " " + eleve.nom).toLowerCase().includes(mot);
+    });
+  }
 
   liste.textContent = "";
-  liste.append(...resultat.map(creerLigne));
+  resultat.forEach(function (eleve) {
+    liste.append(creerLigne(eleve));
+  });
 
-  compteur.textContent =
-    resultat.length + (resultat.length > 1 ? " élèves" : " élève");
-
+  compteur.textContent = resultat.length + " élève(s)";
   messageVide.hidden = resultat.length > 0;
 }
 
