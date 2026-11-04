@@ -84,9 +84,12 @@ function creerLigne(eleve) {
     "text-white",
   );
   btnNote.textContent = "Ajouter la note";
+const message = document.createElement("p");
+message.classList.add("message", "mt-2","text-xs","text-alert");
+message.textContent = "La note doit etre un nombre entre 0 et 20.";
+message.hidden = true;
 
-
-  card.append(btnAbsent, champNote, btnNote);
+  card.append(btnAbsent, champNote, btnNote, message);
 
   return card;
 }
@@ -148,7 +151,9 @@ liste.addEventListener("click", function (e) {
     if (champ.value !== "" && note >= 0 && note <= 20) {
       eleve.notes.push(note);
       li.replaceWith(creerLigne(eleve));
-    } 
+    } else {
+      li.queryselector(".message").hidden = false
+    }
   }
 });
 recherche.addEventListener("input", afficherListe);
