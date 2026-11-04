@@ -46,6 +46,12 @@ function creerLigne(eleve) {
   }
   card.append(moyenne);
 
+  const btnAbsent = document.createElement("button");
+  btnAbsent.type = "button";
+  btnAbsent.classList.add("btn-absent","h-11", "rounded-full","border", "border-line", "px-4","text-sm");
+  btnAbsent.textContent="Absent";
+
+
   return card;
 }
 
@@ -87,6 +93,24 @@ function afficherListe() {
   messageVide.hidden = resultat.length > 0;
 }
 
+
+
+
+liste.addEventListener("click", function(e){
+ const bouton = e.target;
+ const li = button.closest("li");
+ if (!li) return;
+
+ const eleve = eleves.find(function(el){
+  return el.id === Number(li.dataset.id);
+ });
+ 
+
+ if (bouton.classList.contains("btn-absent")){
+  eleve.absences += 1;
+  li.replaceWith(creerLigne(eleve));
+ }
+});
 recherche.addEventListener("input", afficherListe);
 groupefilter.addEventListener("change", afficherListe);
 afficherListe();
