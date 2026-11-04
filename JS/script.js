@@ -40,7 +40,8 @@ function creerLigne(eleve) {
   if (eleve.notes.length > 0) {
     const somme = eleve.notes.reduce((total, note) => total + note, 0);
     const moy = somme / eleve.notes.length;
-    moyenne.textContent = "Moyenne : " + moy.toFixed(1) + " / 20";
+    moyenne.textContent =
+      "Moyenne : " + moy.toFixed(1).replace(".", ",") + " / 20";
   } else {
     moyenne.textContent = "Moyenne : —";
   }
@@ -84,10 +85,11 @@ function creerLigne(eleve) {
     "text-white",
   );
   btnNote.textContent = "Ajouter la note";
-const message = document.createElement("p");
-message.classList.add("message", "mt-2","text-xs","text-alert");
-message.textContent = "La note doit etre un nombre entre 0 et 20.";
-message.hidden = true;
+
+  const message = document.createElement("p");
+  message.classList.add("message", "mt-2", "text-xs", "text-alert");
+  message.textContent = "La note doit être un nombre entre 0 et 20.";
+  message.hidden = true;
 
   card.append(btnAbsent, champNote, btnNote, message);
 
@@ -123,9 +125,7 @@ function afficherListe() {
   }
 
   liste.textContent = "";
-  resultat.forEach(function (eleve) {
-    liste.append(creerLigne(eleve));
-  });
+  liste.append(...resultat.map(creerLigne));
 
   compteur.textContent = resultat.length + " élève(s)";
   messageVide.hidden = resultat.length > 0;
@@ -133,7 +133,7 @@ function afficherListe() {
 
 liste.addEventListener("click", function (e) {
   const bouton = e.target;
-  const li = button.closest("li");
+  const li = bouton.closest("li");
   if (!li) return;
 
   const eleve = eleves.find(function (el) {
@@ -144,18 +144,20 @@ liste.addEventListener("click", function (e) {
     eleve.absences += 1;
     li.replaceWith(creerLigne(eleve));
   }
+
   if (bouton.classList.contains("btn-note")) {
-    const champ = li.queryselector("input");
+    const champ = li.querySelector("input");
     const note = Number(champ.value);
 
     if (champ.value !== "" && note >= 0 && note <= 20) {
       eleve.notes.push(note);
       li.replaceWith(creerLigne(eleve));
     } else {
-      li.queryselector(".message").hidden = false
+      li.querySelector(".message").hidden = false;
     }
   }
 });
+
 recherche.addEventListener("input", afficherListe);
 groupefilter.addEventListener("change", afficherListe);
 afficherListe();
