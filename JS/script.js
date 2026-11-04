@@ -48,9 +48,45 @@ function creerLigne(eleve) {
 
   const btnAbsent = document.createElement("button");
   btnAbsent.type = "button";
-  btnAbsent.classList.add("btn-absent","h-11", "rounded-full","border", "border-line", "px-4","text-sm");
-  btnAbsent.textContent="Absent";
+  btnAbsent.classList.add(
+    "btn-absent",
+    "h-11",
+    "rounded-full",
+    "border",
+    "border-line",
+    "px-4",
+    "text-sm",
+  );
+  btnAbsent.textContent = "Absent";
 
+  const champNote = document.createElement("input");
+  champNote.type = "number";
+  champNote.setAttribute("aria-label", "Note sur 20");
+  champNote.classList.add(
+    "h-11",
+    "rounded-full",
+    "border",
+    "border-line",
+    "bg-paper",
+    "px-4",
+    "text-sm",
+  );
+
+  const btnNote = document.createElement("button");
+  btnNote.type = "button";
+  btnNote.classList.add(
+    "btn-note",
+    "h-11",
+    "rounded-full",
+    "bg-ink",
+    "px-4",
+    "text-sm",
+    "text-white",
+  );
+  btnNote.textContent = "Ajouter la note";
+
+
+  card.append(btnAbsent, champNote, btnNote);
 
   return card;
 }
@@ -70,7 +106,6 @@ function afficherListe() {
   const idGroupe = groupefilter.value;
   const mot = recherche.value.trim().toLowerCase();
   let resultat = eleves;
-
 
   if (idGroupe !== "") {
     resultat = resultat.filter(function (eleve) {
@@ -93,23 +128,28 @@ function afficherListe() {
   messageVide.hidden = resultat.length > 0;
 }
 
+liste.addEventListener("click", function (e) {
+  const bouton = e.target;
+  const li = button.closest("li");
+  if (!li) return;
 
+  const eleve = eleves.find(function (el) {
+    return el.id === Number(li.dataset.id);
+  });
 
+  if (bouton.classList.contains("btn-absent")) {
+    eleve.absences += 1;
+    li.replaceWith(creerLigne(eleve));
+  }
+  if (bouton.classList.contains("btn-note")) {
+    const champ = li.queryselector("input");
+    const note = Number(champ.value);
 
-liste.addEventListener("click", function(e){
- const bouton = e.target;
- const li = button.closest("li");
- if (!li) return;
-
- const eleve = eleves.find(function(el){
-  return el.id === Number(li.dataset.id);
- });
- 
-
- if (bouton.classList.contains("btn-absent")){
-  eleve.absences += 1;
-  li.replaceWith(creerLigne(eleve));
- }
+    if (champ.value !== "" && note >= 0 && note <= 20) {
+      eleve.notes.push(note);
+      li.replaceWith(creerLigne(eleve));
+    } 
+  }
 });
 recherche.addEventListener("input", afficherListe);
 groupefilter.addEventListener("change", afficherListe);
