@@ -194,3 +194,31 @@ liste.addEventListener("click", function (e) {
 recherche.addEventListener("input", afficherListe);
 groupefilter.addEventListener("change", afficherListe);
 afficherListe();
+
+const formEleve = document.getElementById("form-eleve");
+const champPrenom = document.getElementById("prenom");
+const champNom = document.getElementById("nom");
+const champGroupe = document.getElementById("groupe");
+const champEmail = document.getElementById("email");
+const champTelephone = document.getElementById("telephone");
+const champCode = document.getElementById("code");
+const forceCode = document.getElementById("code-force");
+const formSucces = document.getElementById("form-succes");
+const formErreur = document.getElementById("form-erreur");
+
+groupes.forEach(function (groupe) {
+  const option = document.createElement("option");
+  option.value = groupe.id;
+  option.textContent = groupe.nom;
+  champGroupe.append(option);
+});
+
+const REGEX = {
+  nom: /^[\p{L} -]{2,}$/u,
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+  telephone: /^(06|07|\+2126|\+2127)\d{8}$/,
+  majuscule: /\p{Lu}/u,
+  chiffre: /\d/,
+  special: /[^\p{L}\d\s]/u,
+};
+
