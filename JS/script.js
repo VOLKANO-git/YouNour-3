@@ -258,3 +258,140 @@ function verifierCode(valeur) {
   return manque.length > 0 ? "Il manque : " + manque.join(", ") + "." : "";
 }
 
+const champs = [
+  {
+    input: champPrenom,
+    verifier: verifierNom,
+    succes: "Prénom valide.",
+    defaut: "Au moins 2 caractères : lettres, espaces ou tirets.",
+  },
+  {
+    input: champNom,
+    verifier: verifierNom,
+    succes: "Nom valide.",
+    defaut: "Au moins 2 caractères : lettres, espaces ou tirets.",
+  },
+  {
+    input: champGroupe,
+    verifier: verifierGroupe,
+    succes: "Groupe choisi.",
+    defaut: "Groupe de l'élève.",
+  },
+  {
+    input: champEmail,
+    verifier: verifierEmail,
+    succes: "E-mail valide.",
+    defaut: "Exemple : parent@mail.ma",
+  },
+  {
+    input: champTelephone,
+    verifier: verifierTelephone,
+    succes: "Numéro valide.",
+    defaut: "06 / 07 ou +212 6 / 7, puis 8 chiffres.",
+  },
+  {
+    input: champCode,
+    verifier: verifierCode,
+    succes: "Code valide.",
+    defaut: "8 caractères min., 1 majuscule, 1 chiffre, 1 caractère spécial.",
+  },
+];
+
+function verifierChamp(champ) {
+  const erreur = champ.verifier(champ.input.value);
+  const bloc = champ.input.closest(".champ");
+  bloc.classList.remove("erreur", "valide");
+  bloc.classList.add(erreur === "" ? "valide" : "erreur");
+  bloc.querySelector(".message").textContent =
+    erreur === "" ? champ.succes : erreur;
+  return erreur === "";
+}
+function verifierGroupeDisponible(groupeId, prenom, nom) {
+  const membres = eleves.filter(function (eleve) {
+    return eleve.groupeId === groupeId;
+  });
+  if (membres.length >= 15) {
+    return "Ce groupe est complet (15 élèves).";
+  }
+
+  const cible = (prenom + " " + nom).trim().toLowerCase();
+  const existe = membres.some(function (eleve) {
+    return (eleve.prenom + " " + eleve.nom).toLowerCase() === cible;
+  });
+  if (existe) {
+    return "Cet élève existe déjà dans ce groupe.";
+  }
+  return "";
+}
+
+function viderFormulaire() {
+  formEleve.reset();
+  champs.forEach(function (champ) {
+    const bloc = champ.input.closest(".champ");
+    bloc.classList.remove("erreur", "valide");
+    bloc.querySelector(".message").textContent = champ.defaut;
+  });
+  forceCode.value = 0;
+}
+
+champs.forEach(function (champ) {
+  champ.input.addEventListener("input", function () {
+    verifierChamp(champ);
+    formSucces.hidden = true;
+  });
+  champ.input.addEventListener("change", function () {
+    verifierChamp(champ);
+    formSucces.hidden = true;
+  });
+});
+
+champCode.addEventListener("input", function () {
+  forceCode.value = 4 - criteresCodeManquants(champCode.value).length;
+});
+
+formEleve.addEventListener("submit", function (e) {
+  e.preventDefault();
+  formSucces.hidden = true;
+  formErreur.hidden = true;
+
+  let premierInvalide = null;
+  champs.forEach(function (champ) {
+    const valide = verifierChamp(champ);
+    if (!valide && premierInvalide === null) {
+      premierInvalide = champ.input;
+    }
+  });
+  if (premierInvalide !== null) {
+    premierInvalide.focus();
+    return;
+  }
+
+  const groupeId = Number(champGroupe.value);
+  const probleme = verifierGroupeDisponible(
+    groupeId,
+    champPrenom.value.trim(),
+    champNom.value.trim(),
+  );
+  if (probleme !== "") {
+    formErreur.textContent = probleme;
+    formErreur.hidden = false;
+    return;
+  }
+
+  eleves.push({
+    id: Math.max(...eleves.map((eleve) => eleve.id)) + 1,
+    prenom: champPrenom.value.trim(),
+    nom: champNom.value.trim(),
+    groupeId: groupeId,
+    telephoneParent: champTelephone.value.replace(/\s/g, ""),
+    emailParent: champEmail.value.trim(),
+    absences: 0,
+    notes: [],
+  });
+
+  afficherListe();
+  viderFormulaire();
+  formSucces.hidden = false;
+});
+
+viderFormulaire();
