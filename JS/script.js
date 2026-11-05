@@ -129,6 +129,38 @@ function afficherListe() {
 
   compteur.textContent = resultat.length + " élève(s)";
   messageVide.hidden = resultat.length > 0;
+  afficherParents();
+}
+
+const listeParents = document.getElementById("liste-parents");
+const aucuneAlerte = document.getElementById("aucune-alerte");
+
+function creerLigneParent(eleve) {
+  const li = document.createElement("li");
+  li.classList.add(
+    "rounded-xl",
+    "bg-card",
+    "px-3",
+    "py-2",
+    "ring-1",
+    "ring-line",
+  );
+  li.textContent =
+    eleve.prenom + " " + eleve.nom + " — " + eleve.telephoneParent;
+  return li;
+}
+
+function afficherParents() {
+  const idGroupe = groupefilter.value;
+
+  const alertes = eleves.filter(function (eleve) {
+    const dansGroupe = idGroupe === "" || String(eleve.groupeId) === idGroupe;
+    return dansGroupe && eleve.absences >= 3;
+  });
+
+  listeParents.textContent = "";
+  listeParents.append(...alertes.map(creerLigneParent));
+  aucuneAlerte.hidden = alertes.length > 0;
 }
 
 liste.addEventListener("click", function (e) {
@@ -143,6 +175,7 @@ liste.addEventListener("click", function (e) {
   if (bouton.classList.contains("btn-absent")) {
     eleve.absences += 1;
     li.replaceWith(creerLigne(eleve));
+    afficherParents();
   }
 
   if (bouton.classList.contains("btn-note")) {
