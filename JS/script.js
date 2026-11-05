@@ -222,3 +222,39 @@ const REGEX = {
   special: /[^\p{L}\d\s]/u,
 };
 
+function verifierNom(valeur) {
+  return REGEX.nom.test(valeur.trim())
+    ? ""
+    : "Au moins 2 caractères : lettres, espaces ou tirets.";
+}
+
+function verifierGroupe(valeur) {
+  return valeur === "" ? "Choisissez un groupe." : "";
+}
+
+function verifierEmail(valeur) {
+  return REGEX.email.test(valeur.trim())
+    ? ""
+    : "Adresse e-mail invalide. Exemple : parent@mail.ma";
+}
+
+function verifierTelephone(valeur) {
+  return REGEX.telephone.test(valeur.replace(/\s/g, ""))
+    ? ""
+    : "Format attendu : 06 ou 07, ou +212 6 / +212 7, puis 8 chiffres.";
+}
+
+function criteresCodeManquants(valeur) {
+  const manque = [];
+  if (valeur.length < 8) manque.push("8 caractères");
+  if (!REGEX.majuscule.test(valeur)) manque.push("une majuscule");
+  if (!REGEX.chiffre.test(valeur)) manque.push("un chiffre");
+  if (!REGEX.special.test(valeur)) manque.push("un caractère spécial");
+  return manque;
+}
+
+function verifierCode(valeur) {
+  const manque = criteresCodeManquants(valeur);
+  return manque.length > 0 ? "Il manque : " + manque.join(", ") + "." : "";
+}
+
