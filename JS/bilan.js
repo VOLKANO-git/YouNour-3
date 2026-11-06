@@ -26,4 +26,11 @@
     );
     elMoyenne.textContent =
       toutesLesNotes.length > 0 ? formater(moyenne(toutesLesNotes)) : "—";
+
+ 
+    const totalAbsences = membres.reduce(
+      (total, eleve) => total + eleve.absences,
+      0,
+    );
+    elAbsences.textContent = totalAbsences;
 })();
